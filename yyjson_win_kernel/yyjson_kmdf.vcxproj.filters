@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="compat">
+      <UniqueIdentifier>{7C42BB0B-58FD-4DA1-8D55-8B0C1AF21A5B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="driver">
+      <UniqueIdentifier>{1C4105EA-1AAB-45C9-BF44-4668A2DC55AA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="upstream">
+      <UniqueIdentifier>{A7EBEB3C-E188-46A1-AD05-F3E0F1A98D2A}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\yyjson\src\yyjson.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_allocator.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_err_code.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_json_merge_patch.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_json_mut_val.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_json_patch.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_json_pointer.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_json_reader.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_json_val.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_json_writer.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_number.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_roundtrip.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\test_string.c">
+      <Filter>upstream</Filter>
+    </ClCompile>
+    <ClCompile Include="compat\src\yyjsonk_alloc.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="compat\src\yyjsonk_format.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="compat\src\yyjsonk_locale.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="compat\src\yyjsonk_path.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="compat\src\yyjsonk_stdio.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="compat\src\yyjsonk_test_support.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="..\yyjson\test\util\goo_double_conv.c">
+      <Filter>compat</Filter>
+    </ClCompile>
+    <ClCompile Include="driver\driver.c">
+      <Filter>driver</Filter>
+    </ClCompile>
+    <ClCompile Include="driver\test_runner.c">
+      <Filter>driver</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\yyjson\src\yyjson.h">
+      <Filter>upstream</Filter>
+    </ClInclude>
+    <ClInclude Include="compat\include\assert.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="compat\include\locale.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="compat\include\stdio.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="compat\include\yy_test_utils.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="compat\include\yy_xctest.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="compat\include\yyjsonk_config.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="compat\include\yyjsonk_runtime.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="..\yyjson\test\util\goo_double_conv.h">
+      <Filter>compat</Filter>
+    </ClInclude>
+    <ClInclude Include="driver\test_registry.h">
+      <Filter>driver</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Inf Include="yyjson_kmdf.inf" />
+  </ItemGroup>
+</Project>

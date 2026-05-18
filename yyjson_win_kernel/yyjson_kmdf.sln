@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yyjson_kmdf", "yyjson_kmdf.vcxproj", "{4EF76053-46E4-4139-A65D-12204C3F1768}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4EF76053-46E4-4139-A65D-12204C3F1768}.Debug|x64.ActiveCfg = Debug|x64
+		{4EF76053-46E4-4139-A65D-12204C3F1768}.Debug|x64.Build.0 = Debug|x64
+		{4EF76053-46E4-4139-A65D-12204C3F1768}.Release|x64.ActiveCfg = Release|x64
+		{4EF76053-46E4-4139-A65D-12204C3F1768}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6DA6B5D3-3C73-41B0-8933-F5E80EB2B33A}
+	EndGlobalSection
+EndGlobal

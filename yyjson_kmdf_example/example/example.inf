@@ -1,0 +1,56 @@
+;
+; example.inf
+;
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = System
+ClassGuid   = {4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider    = %ManufacturerName%
+CatalogFile = example.cat
+DriverVer   =
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 13
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+example.sys = 1,,
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTamd64
+
+[Standard.NTamd64]
+%example.DeviceDesc% = example_Device, Root\example
+
+[example_Device.NT]
+CopyFiles = File_Copy
+
+[File_Copy]
+example.sys
+
+[example_Device.NT.Services]
+AddService = example,%SPSVCINST_ASSOCSERVICE%,example_Service_Inst
+
+[example_Service_Inst]
+DisplayName   = %example.SVCDESC%
+ServiceType   = 1
+StartType     = 3
+ErrorControl  = 1
+ServiceBinary = %13%\example.sys
+
+[example_Device.NT.Wdf]
+KmdfService = example, example_wdfsect
+
+[example_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE = 0x00000002
+ManufacturerName = "yyjson"
+DiskName = "example Installation Disk"
+example.DeviceDesc = "yyjson KMDF example device"
+example.SVCDESC = "yyjson KMDF example service"

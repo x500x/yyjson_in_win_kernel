@@ -1,0 +1,9 @@
+#ifndef YYJSONK_CONFIG_H
+#define YYJSONK_CONFIG_H
+
+#define YYJSONK_MAX_PATH 4096
+#define YYJSONK_MAX_LOG 2048
+#define YYJSONK_POOL_TAG 'exjY'
+#define YYJSONK_DRIVER_NAME "example"
+
+#endif
