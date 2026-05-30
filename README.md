@@ -1,101 +1,283 @@
-# yyjson in Windows Kernel
+# yyjson Windows 内核移植
 
-## 中文
+[English](README_en.md) | [中文](README.md)
 
-`yyjson_in_win_kernel` 演示如何在 Windows KMDF 内核驱动中集成 yyjson，并提供一组最小兼容层来补齐 yyjson 依赖的 C 运行时能力。
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Build](https://img.shields.io/badge/Build-WDK%2010.0.22621-blue.svg)](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/download-the-wdk)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20Kernel%20(x64)-green.svg)](https://docs.microsoft.com/zh-cn/windows-hardware/drivers/kernel/)
 
-### 目录结构
+将 [yyjson](https://github.com/ibireme/yyjson)（高性能 JSON 库）完整移植到 Windows 内核模式驱动框架 (KMDF)。本项目提供了一个最小化的兼容层，用于桥接 yyjson 的 C 运行时依赖与内核模式 API。
 
-- `yyjson_win_kernel/`: 面向 yyjson 内核适配的 KMDF 工程和测试入口。
-- `yyjson_kmdf_example/`: 独立 KMDF 示例驱动，直接随工程携带 yyjson 源码和兼容层。
-- `LICENSE`: 仓库许可证。
+## 功能特性
 
-### 示例覆盖
+- **完整的 yyjson API 支持**：在内核模式下解析、查询、修改和生成 JSON 文档
+- **内核兼容的 C 运行时**：为内核环境自定义实现 `stdio.h`、`math.h`、`locale.h` 和 `assert.h`
+- **文件 I/O 支持**：从内核空间读写 JSON 文件（需要 `PASSIVE_LEVEL`）
+- **内存安全**：使用内核池分配并正确清理
+- **KMDF 集成**：通过 WDF 回调实现正确的驱动生命周期管理
+- **双项目结构**：独立的示例驱动和可复用的内核适配层
 
-`yyjson_kmdf_example` 当前包含这些运行示例：
+## 前提条件
 
-- 从内存字符串解析 JSON，并读取字符串、整数、布尔值。
-- 遍历 JSON 数组对象并统计状态与字节数。
-- 构造可变 JSON 文档并格式化输出。
-- 使用 yyjson 文件 API 写入并读取 JSON 文件。
+- **Visual Studio 2022**（或更高版本），包含 C++ 桌面开发工作负载
+- **Windows 驱动程序工具包 (WDK)** 10.0.22621（或兼容版本）
+- **启用测试签名**：`bcdedit /set testsigning on`
+- **内核调试设置**（可选但推荐）：WinDbg 或 DebugView
 
-文件示例默认写入：
+## 快速开始
 
-```text
-C:\Windows\Temp\yyjson_kmdf_example.json
+### 1. 克隆仓库
+
+```bash
+git clone https://github.com/your-username/yyjson_in_win_kernel.git
+cd yyjson_in_win_kernel
 ```
 
-内核文件 API 只应在 `PASSIVE_LEVEL` 调用，并建议使用绝对 DOS 路径或 NT 路径。
+### 2. 构建示例驱动
 
-### 构建
+```bash
+# 在 Visual Studio 中打开解决方案
+start yyjson_kmdf_example\example.sln
 
-1. 安装 Visual Studio 和 Windows Driver Kit。
-2. 打开 `yyjson_kmdf_example\example.sln`。
-3. 选择 `Debug|x64` 或 `Release|x64`。
-4. 构建后生成 `example.sys`。
+# 或者从命令行构建
+msbuild yyjson_kmdf_example\example.sln /p:Configuration=Release /p:Platform=x64
+```
 
-### 运行
+### 3. 安装并运行
 
-请在测试签名和内核调试环境中运行驱动，并使用管理员权限执行：
-
-```cmd
+```bash
+# 以管理员身份运行
 yyjson_kmdf_example\install_example.cmd
 ```
 
-驱动会通过 `DbgPrintEx` 输出解析、生成和文件读写日志，可在 WinDbg 或 DebugView 中查看。
+### 4. 查看输出
 
-卸载示例驱动：
+使用以下方式监控调试输出：
+- **WinDbg**：连接内核调试会话
+- **DebugView**：启用内核捕获（Ctrl+K）
 
-```cmd
+### 5. 卸载驱动
+
+```bash
 yyjson_kmdf_example\uninstall_example.cmd
 ```
 
-## English
+## 项目结构
 
-`yyjson_in_win_kernel` demonstrates how to integrate yyjson into a Windows KMDF kernel driver. It also includes a small compatibility layer for the C runtime pieces yyjson expects.
-
-### Layout
-
-- `yyjson_win_kernel/`: KMDF project and test entry points for the yyjson kernel port.
-- `yyjson_kmdf_example/`: Standalone KMDF example driver with vendored yyjson sources and compatibility code.
-- `LICENSE`: Repository license.
-
-### Example Coverage
-
-`yyjson_kmdf_example` currently demonstrates:
-
-- Parsing JSON from an in-memory string and reading string, integer, and boolean fields.
-- Traversing an array of JSON objects and summarizing status and byte counts.
-- Building a mutable JSON document and writing formatted JSON.
-- Writing and reading JSON through yyjson file APIs.
-
-The file example writes to:
-
-```text
-C:\Windows\Temp\yyjson_kmdf_example.json
+```
+yyjson_in_win_kernel/
+├── yyjson_win_kernel/              # 内核适配层
+│   ├── compat/                     # C 运行时兼容层
+│   │   ├── include/                # 内核兼容头文件
+│   │   │   ├── stdio.h            # 文件 I/O 函数
+│   │   │   ├── math.h             # 数学函数
+│   │   │   ├── locale.h           # 区域设置支持
+│   │   │   └── assert.h           # 调试断言
+│   │   └── src/                    # 实现文件
+│   └── driver/                     # 测试驱动实现
+│       ├── driver.c                # KMDF 驱动入口
+│       ├── test_runner.c           # 测试执行逻辑
+│       └── test_registry.h         # 测试配置
+│
+├── yyjson_kmdf_example/            # 独立示例驱动
+│   ├── example.sln                 # Visual Studio 解决方案
+│   ├── example/                    # 驱动项目
+│   │   ├── driver/                 # 示例驱动代码
+│   │   ├── compat/                 # 兼容层
+│   │   ├── yyjson/                 # 内置 yyjson 源码
+│   │   └── third_party/            # double-conversion 库
+│   ├── install_example.cmd         # 驱动安装脚本
+│   └── uninstall_example.cmd       # 驱动卸载脚本
+│
+├── LICENSE                         # MIT 许可证
+└── README.md                       # 英文文档
+└── README_zh.md                    # 本文档
 ```
 
-Kernel file APIs should only be called at `PASSIVE_LEVEL`, and callers should prefer absolute DOS paths or NT paths.
+## 示例说明
 
-### Build
+示例驱动 (`example.sys`) 演示以下功能：
 
-1. Install Visual Studio and the Windows Driver Kit.
-2. Open `yyjson_kmdf_example\example.sln`.
-3. Select `Debug|x64` or `Release|x64`.
-4. Build the solution to produce `example.sys`.
+### 1. 内存中的 JSON 解析
+```c
+// 从字符串解析 JSON
+yyjson_doc *doc = yyjson_read(json_str, len, 0);
+yyjson_val *root = yyjson_doc_get_root(doc);
 
-### Run
-
-Run the driver only in a test-signing and kernel-debugging environment. From an elevated prompt:
-
-```cmd
-yyjson_kmdf_example\install_example.cmd
+// 读取值
+const char *name = yyjson_get_str(yyjson_obj_get(root, "name"));
+int64_t version = yyjson_get_int(yyjson_obj_get(root, "version"));
+bool enabled = yyjson_get_bool(yyjson_obj_get(root, "enabled"));
 ```
 
-The driver logs parsing, generation, and file I/O output through `DbgPrintEx`; view it in WinDbg or DebugView.
-
-Unload the example driver with:
-
-```cmd
-yyjson_kmdf_example\uninstall_example.cmd
+### 2. 数组遍历
+```c
+// 遍历 JSON 数组
+yyjson_val *arr = yyjson_obj_get(root, "requests");
+yyjson_val *item;
+yyjson_arr_foreach(arr, idx, max, item) {
+    const char *op = yyjson_get_str(yyjson_obj_get(item, "op"));
+    int64_t size = yyjson_get_int(yyjson_obj_get(item, "size"));
+    // 处理每个元素...
+}
 ```
+
+### 3. 可变文档生成
+```c
+// 创建可变文档
+yyjson_mut_doc *doc = yyjson_mut_doc_new(NULL);
+yyjson_mut_val *root = yyjson_mut_obj(doc);
+
+// 添加值
+yyjson_mut_obj_add_str(doc, root, "name", "example");
+yyjson_mut_obj_add_int(doc, root, "version", 1);
+yyjson_mut_doc_set_root(doc, root);
+
+// 序列化为 JSON 字符串
+const char *json = yyjson_mut_write(doc, 0, NULL);
+```
+
+### 4. 文件 I/O 操作
+```c
+// 将 JSON 写入文件
+yyjson_mut_write_file(path, doc, YYJSON_WRITE_PRETTY, NULL, NULL);
+
+// 从文件读取 JSON
+yyjson_doc *doc = yyjson_read_file(path, 0, NULL, NULL);
+```
+
+**注意**：文件操作要求：
+- `PASSIVE_LEVEL` IRQL 级别
+- 使用绝对 DOS 路径（例如 `C:\Windows\Temp\file.json`）或 NT 路径
+
+## 从源码构建
+
+### 方式一：Visual Studio IDE
+
+1. 打开 `yyjson_kmdf_example\example.sln`
+2. 选择配置：`Debug|x64` 或 `Release|x64`
+3. 生成解决方案（Ctrl+Shift+B）
+4. 输出：`x64\Release\example.sys`
+
+### 方式二：命令行
+
+```bash
+# 设置构建环境
+"C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\VsDevCmd.bat"
+
+# 构建
+msbuild yyjson_kmdf_example\example.sln /p:Configuration=Release /p:Platform=x64 /t:Build
+```
+
+### 构建配置
+
+| 配置 | 说明 |
+|------|------|
+| `Debug|x64` | 调试版本，包含符号，无优化 |
+| `Release|x64` | 发布版本，启用优化 |
+
+## API 参考
+
+### 核心 yyjson 函数
+
+| 函数 | 说明 |
+|------|------|
+| `yyjson_read()` | 从字符串解析 JSON |
+| `yyjson_doc_get_root()` | 从文档获取根值 |
+| `yyjson_get_str()` | 获取字符串值 |
+| `yyjson_get_int()` | 获取整数值 |
+| `yyjson_get_bool()` | 获取布尔值 |
+| `yyjson_obj_get()` | 通过键获取对象成员 |
+| `yyjson_arr_foreach()` | 遍历数组元素 |
+
+### 可变文档函数
+
+| 函数 | 说明 |
+|------|------|
+| `yyjson_mut_doc_new()` | 创建新的可变文档 |
+| `yyjson_mut_obj()` | 创建可变对象 |
+| `yyjson_mut_obj_add_str()` | 向对象添加字符串 |
+| `yyjson_mut_obj_add_int()` | 向对象添加整数 |
+| `yyjson_mut_write()` | 序列化为 JSON 字符串 |
+
+### 文件 I/O 函数
+
+| 函数 | 说明 |
+|------|------|
+| `yyjson_read_file()` | 从文件读取 JSON |
+| `yyjson_mut_write_file()` | 将 JSON 写入文件 |
+
+### 内核兼容层
+
+| 头文件 | 提供的函数 |
+|--------|-----------|
+| `stdio.h` | `fopen`, `fread`, `fwrite`, `fclose`, `fseek`, `ftell` |
+| `math.h` | `pow`, `log10`, `ceil`, `floor`, `fabs` |
+| `locale.h` | `setlocale`, `localeconv` |
+| `assert.h` | `assert`（仅调试版本） |
+
+## 调试指南
+
+### 启用调试输出
+
+```c
+// 在驱动代码中
+DbgPrintEx(DPFLTR_DEFAULT_ID, DPFLTR_INFO_LEVEL, 
+           "JSON 解析结果: %s\n", json_str);
+```
+
+### 查看调试输出
+
+**WinDbg**:
+```
+ed nt!Kd_DEFAULT_Mask 0xFFFFFFFF
+g
+```
+
+**DebugView**:
+1. 以管理员身份运行
+2. 启用"捕获内核"（Ctrl+K）
+3. 按进程名过滤
+
+### 常见调试场景
+
+| 问题 | 解决方案 |
+|------|----------|
+| 无输出 | 检查 IRQL 级别，确保在 `PASSIVE_LEVEL` |
+| 访问冲突 | 验证内存分配，检查缓冲区大小 |
+| 文件未找到 | 使用绝对路径，检查文件权限 |
+
+## 贡献指南
+
+1. Fork 本仓库
+2. 创建功能分支：`git checkout -b feature/amazing-feature`
+3. 提交更改：`git commit -m '添加某项功能'`
+4. 推送到分支：`git push origin feature/amazing-feature`
+5. 创建 Pull Request
+
+### 开发规范
+
+- 遵循内核编码标准（SAL 注解、正确的错误处理）
+- 在多个 Windows 版本上测试（10、11）
+- 更新 API 更改的文档
+- 为新功能添加单元测试
+
+## 许可证
+
+本项目采用 MIT 许可证 - 详情请参阅 [LICENSE](LICENSE) 文件。
+
+## 致谢
+
+- [yyjson](https://github.com/ibireme/yyjson) - ibireme 开发的高性能 JSON 库
+- [double-conversion](https://github.com/google/double-conversion) - IEEE 754 双精度浮点数转换
+- [Windows Driver Samples](https://github.com/microsoft/Windows-driver-samples) - KMDF 参考实现
+
+## 支持
+
+- **问题反馈**：[GitHub Issues](https://github.com/your-username/yyjson_in_win_kernel/issues)
+- **讨论交流**：[GitHub Discussions](https://github.com/your-username/yyjson_in_win_kernel/discussions)
+- **电子邮件**：your.email@example.com
+
+---
+
+**注意**：本项目仅用于教育和开发目的。在生产环境中使用前，请务必在隔离环境中测试内核驱动。
