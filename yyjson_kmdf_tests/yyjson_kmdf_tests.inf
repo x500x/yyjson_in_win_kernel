@@ -1,0 +1,56 @@
+;
+; yyjson_kmdf_tests.inf
+;
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = System
+ClassGuid   = {4d36e97d-e325-11ce-bfc1-08002be10318}
+Provider    = %ManufacturerName%
+CatalogFile = yyjson_kmdf_tests.cat
+DriverVer   =
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 13
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+yyjson_kmdf_tests.sys = 1,,
+
+[Manufacturer]
+%ManufacturerName% = Standard,NTamd64
+
+[Standard.NTamd64]
+%yyjson_kmdf_tests.DeviceDesc% = yyjson_kmdf_tests_Device, Root\yyjson_kmdf_tests
+
+[yyjson_kmdf_tests_Device.NT]
+CopyFiles = File_Copy
+
+[File_Copy]
+yyjson_kmdf_tests.sys
+
+[yyjson_kmdf_tests_Device.NT.Services]
+AddService = yyjson_kmdf_tests,%SPSVCINST_ASSOCSERVICE%,yyjson_kmdf_tests_Service_Inst
+
+[yyjson_kmdf_tests_Service_Inst]
+DisplayName   = %yyjson_kmdf_tests.SVCDESC%
+ServiceType   = 1
+StartType     = 3
+ErrorControl  = 1
+ServiceBinary = %13%\yyjson_kmdf_tests.sys
+
+[yyjson_kmdf_tests_Device.NT.Wdf]
+KmdfService = yyjson_kmdf_tests, yyjson_kmdf_tests_wdfsect
+
+[yyjson_kmdf_tests_wdfsect]
+KmdfLibraryVersion = $KMDFVERSION$
+
+[Strings]
+SPSVCINST_ASSOCSERVICE = 0x00000002
+ManufacturerName = "yyjson"
+DiskName = "yyjson_kmdf_tests Installation Disk"
+yyjson_kmdf_tests.DeviceDesc = "yyjson_kmdf_tests Device"
+yyjson_kmdf_tests.SVCDESC = "yyjson_kmdf_tests Service"

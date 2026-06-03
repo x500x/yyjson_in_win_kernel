@@ -1,5 +1,4 @@
 #include "yy_test_utils.h"
-#include "yyjsonk_runtime.h"
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -408,7 +407,7 @@ YYJSONK_DirReadCommon(const char *path, int *count, bool full)
     HANDLE handle = NULL;
     NTSTATUS status;
     void *buffer = NULL;
-    ULONG restart = TRUE;
+    BOOLEAN restart = TRUE;
     int idx = 0;
     int cap = 0;
     char **names = NULL;

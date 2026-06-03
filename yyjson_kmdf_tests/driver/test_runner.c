@@ -1,5 +1,5 @@
 #include "test_registry.h"
-#include "yyjsonk_runtime.h"
+#include "yyjsonk_test_support.h"
 
 void test_allocator(void);
 void test_err_code(void);
@@ -95,36 +95,36 @@ yyjsonk_run_all_tests(void)
 
         yyjsonk_set_current_test(test->name);
         yyjsonk_clear_current_test_failure();
-        yyjsonk_logf(DPFLTR_INFO_LEVEL, "[yyjson_kmdf][BEGIN] %s\n", test->name);
+        yyjsonk_logf(DPFLTR_INFO_LEVEL, "[yyjson_kmdf_tests][BEGIN] %s\n", test->name);
 
         __try {
             status = yyjsonk_run_test_on_expanded_stack(test);
             if (!NT_SUCCESS(status)) {
                 failures++;
                 yyjsonk_logf(DPFLTR_ERROR_LEVEL,
-                             "[yyjson_kmdf][FAIL] %s stack_expand status=0x%08X\n",
+                             "[yyjson_kmdf_tests][FAIL] %s stack_expand status=0x%08X\n",
                              test->name,
                              status);
             } else if (yyjsonk_current_test_failed()) {
                 failures++;
                 yyjsonk_logf(DPFLTR_ERROR_LEVEL,
-                             "[yyjson_kmdf][FAIL] %s %s",
+                             "[yyjson_kmdf_tests][FAIL] %s %s",
                              test->name,
                              yyjsonk_last_failure_message());
             } else {
-                yyjsonk_logf(DPFLTR_INFO_LEVEL, "[yyjson_kmdf][PASS] %s\n", test->name);
+                yyjsonk_logf(DPFLTR_INFO_LEVEL, "[yyjson_kmdf_tests][PASS] %s\n", test->name);
             }
         } __except (EXCEPTION_EXECUTE_HANDLER) {
             failures++;
             yyjsonk_logf(DPFLTR_ERROR_LEVEL,
-                         "[yyjson_kmdf][EXCEPTION] %s status=0x%08X\n",
+                         "[yyjson_kmdf_tests][EXCEPTION] %s status=0x%08X\n",
                          test->name,
                          GetExceptionCode());
         }
     }
 
     yyjsonk_logf(DPFLTR_ERROR_LEVEL,
-                 "[yyjson_kmdf][SUMMARY] total=%llu failures=%d\n",
+                 "[yyjson_kmdf_tests][SUMMARY] total=%llu failures=%d\n",
                  (unsigned long long)total,
                  failures);
     yyjsonk_set_current_test(NULL);

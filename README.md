@@ -86,7 +86,10 @@ yyjson_in_win_kernel/
 │   ├── install_example.cmd         # 驱动安装脚本
 │   └── uninstall_example.cmd       # 驱动卸载脚本
 │
-├── yyjson_win_kernel/              # 测试驱动与测试适配代码
+├── yyjson_kmdf_tests/              # 链接 yyjson_kmdf_lib 的测试驱动
+│   ├── yyjson_kmdf_tests.sln       # 测试驱动解决方案，包含库工程引用
+│   ├── compat/                     # 仅保留上游测试所需的辅助代码
+│   └── driver/                     # 测试驱动入口和测试执行器
 │
 ├── LICENSE                         # MIT 许可证
 └── README.md                       # 英文文档

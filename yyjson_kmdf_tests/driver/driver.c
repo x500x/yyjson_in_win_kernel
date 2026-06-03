@@ -2,14 +2,14 @@
 #include <wdf.h>
 
 #include "test_registry.h"
-#include "yyjsonk_runtime.h"
+#include "yyjsonk_test_support.h"
 
 DRIVER_INITIALIZE DriverEntry;
-EVT_WDF_OBJECT_CONTEXT_CLEANUP yyjson_kmdf_driver_cleanup;
-EVT_WDF_DRIVER_UNLOAD yyjson_kmdf_driver_unload;
+EVT_WDF_OBJECT_CONTEXT_CLEANUP yyjson_kmdf_tests_driver_cleanup;
+EVT_WDF_DRIVER_UNLOAD yyjson_kmdf_tests_driver_unload;
 
 VOID
-yyjson_kmdf_driver_cleanup(
+yyjson_kmdf_tests_driver_cleanup(
     _In_ WDFOBJECT DriverObject
     )
 {
@@ -18,7 +18,7 @@ yyjson_kmdf_driver_cleanup(
 }
 
 VOID
-yyjson_kmdf_driver_unload(
+yyjson_kmdf_tests_driver_unload(
     _In_ WDFDRIVER Driver
     )
 {
@@ -38,10 +38,10 @@ DriverEntry(
 
     WDF_DRIVER_CONFIG_INIT(&config, WDF_NO_EVENT_CALLBACK);
     config.DriverInitFlags |= WdfDriverInitNonPnpDriver;
-    config.EvtDriverUnload = yyjson_kmdf_driver_unload;
+    config.EvtDriverUnload = yyjson_kmdf_tests_driver_unload;
 
     WDF_OBJECT_ATTRIBUTES_INIT(&attributes);
-    attributes.EvtCleanupCallback = yyjson_kmdf_driver_cleanup;
+    attributes.EvtCleanupCallback = yyjson_kmdf_tests_driver_cleanup;
 
     status = WdfDriverCreate(DriverObject,
                              RegistryPath,

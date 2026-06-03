@@ -91,7 +91,9 @@
     <ClCompile Include="compat\src\yyjsonk_runtime.c" />
     <ClCompile Include="compat\src\yyjsonk_stdio.c" />
     <ClCompile Include="src\yyjson.c" />
-    <ClCompile Include="third_party\goo_double_conv.c" />
+    <ClCompile Include="third_party\goo_double_conv.c">
+      <DisableSpecificWarnings>4101;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\assert.h" />

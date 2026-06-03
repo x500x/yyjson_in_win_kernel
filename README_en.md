@@ -86,7 +86,10 @@ yyjson_in_win_kernel/
 │   ├── install_example.cmd         # Driver installation script
 │   └── uninstall_example.cmd       # Driver removal script
 │
-├── yyjson_win_kernel/              # Test driver and test adaptation code
+├── yyjson_kmdf_tests/              # Test driver that links yyjson_kmdf_lib
+│   ├── yyjson_kmdf_tests.sln       # Test driver solution with library project reference
+│   ├── compat/                     # Helper code required by upstream tests only
+│   └── driver/                     # Test driver entry point and test runner
 │
 ├── LICENSE                         # MIT License
 └── README.md                       # This file

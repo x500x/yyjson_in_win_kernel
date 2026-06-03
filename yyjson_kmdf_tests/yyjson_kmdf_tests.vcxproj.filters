@@ -10,66 +10,51 @@
     <Filter Include="upstream">
       <UniqueIdentifier>{A7EBEB3C-E188-46A1-AD05-F3E0F1A98D2A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="library">
+      <UniqueIdentifier>{F6C3FD7A-DC48-4F8D-922C-573807FA7B80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\yyjson\src\yyjson.c">
+    <ClCompile Include="..\..\yyjson\test\test_allocator.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_allocator.c">
+    <ClCompile Include="..\..\yyjson\test\test_err_code.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_err_code.c">
+    <ClCompile Include="..\..\yyjson\test\test_json_merge_patch.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_json_merge_patch.c">
+    <ClCompile Include="..\..\yyjson\test\test_json_mut_val.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_json_mut_val.c">
+    <ClCompile Include="..\..\yyjson\test\test_json_patch.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_json_patch.c">
+    <ClCompile Include="..\..\yyjson\test\test_json_pointer.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_json_pointer.c">
+    <ClCompile Include="..\..\yyjson\test\test_json_reader.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_json_reader.c">
+    <ClCompile Include="..\..\yyjson\test\test_json_val.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_json_val.c">
+    <ClCompile Include="..\..\yyjson\test\test_json_writer.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_json_writer.c">
+    <ClCompile Include="..\..\yyjson\test\test_number.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_number.c">
+    <ClCompile Include="..\..\yyjson\test\test_roundtrip.c">
       <Filter>upstream</Filter>
     </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_roundtrip.c">
+    <ClCompile Include="..\..\yyjson\test\test_string.c">
       <Filter>upstream</Filter>
-    </ClCompile>
-    <ClCompile Include="..\yyjson\test\test_string.c">
-      <Filter>upstream</Filter>
-    </ClCompile>
-    <ClCompile Include="compat\src\yyjsonk_alloc.c">
-      <Filter>compat</Filter>
-    </ClCompile>
-    <ClCompile Include="compat\src\yyjsonk_format.c">
-      <Filter>compat</Filter>
-    </ClCompile>
-    <ClCompile Include="compat\src\yyjsonk_locale.c">
-      <Filter>compat</Filter>
     </ClCompile>
     <ClCompile Include="compat\src\yyjsonk_path.c">
       <Filter>compat</Filter>
     </ClCompile>
-    <ClCompile Include="compat\src\yyjsonk_stdio.c">
-      <Filter>compat</Filter>
-    </ClCompile>
     <ClCompile Include="compat\src\yyjsonk_test_support.c">
-      <Filter>compat</Filter>
-    </ClCompile>
-    <ClCompile Include="..\yyjson\test\util\goo_double_conv.c">
       <Filter>compat</Filter>
     </ClCompile>
     <ClCompile Include="driver\driver.c">
@@ -80,17 +65,14 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\yyjson\src\yyjson.h">
-      <Filter>upstream</Filter>
+    <ClInclude Include="..\yyjson_kmdf_lib\include\yyjson.h">
+      <Filter>library</Filter>
     </ClInclude>
-    <ClInclude Include="compat\include\assert.h">
-      <Filter>compat</Filter>
+    <ClInclude Include="..\yyjson_kmdf_lib\include\yyjsonk_runtime.h">
+      <Filter>library</Filter>
     </ClInclude>
-    <ClInclude Include="compat\include\locale.h">
-      <Filter>compat</Filter>
-    </ClInclude>
-    <ClInclude Include="compat\include\stdio.h">
-      <Filter>compat</Filter>
+    <ClInclude Include="..\yyjson_kmdf_lib\third_party\goo_double_conv.h">
+      <Filter>library</Filter>
     </ClInclude>
     <ClInclude Include="compat\include\yy_test_utils.h">
       <Filter>compat</Filter>
@@ -98,13 +80,7 @@
     <ClInclude Include="compat\include\yy_xctest.h">
       <Filter>compat</Filter>
     </ClInclude>
-    <ClInclude Include="compat\include\yyjsonk_config.h">
-      <Filter>compat</Filter>
-    </ClInclude>
-    <ClInclude Include="compat\include\yyjsonk_runtime.h">
-      <Filter>compat</Filter>
-    </ClInclude>
-    <ClInclude Include="..\yyjson\test\util\goo_double_conv.h">
+    <ClInclude Include="compat\include\yyjsonk_test_support.h">
       <Filter>compat</Filter>
     </ClInclude>
     <ClInclude Include="driver\test_registry.h">
@@ -112,6 +88,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Inf Include="yyjson_kmdf.inf" />
+    <Inf Include="yyjson_kmdf_tests.inf" />
   </ItemGroup>
 </Project>

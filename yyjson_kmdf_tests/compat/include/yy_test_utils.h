@@ -15,7 +15,7 @@
 #include <stdarg.h>
 #include <stddef.h>
 
-#include "yyjsonk_runtime.h"
+#include "yyjsonk_test_support.h"
 
 /* warning suppress for tests */
 #if defined(__clang__)

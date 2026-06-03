@@ -129,7 +129,7 @@ yyjsonk_fail_assert(const char *expr, const char *file, int line, const char *fm
     if (fmt && detail[0]) {
         snprintf(message,
                  sizeof(message),
-                 "[yyjson_kmdf][FAIL][%s] %s (%s:%d): %s\n",
+                 "[yyjson_kmdf_tests][FAIL][%s] %s (%s:%d): %s\n",
                  g_yyjsonk_current_test ? g_yyjsonk_current_test : "<no-test>",
                  expr ? expr : "<expr>",
                  file ? file : "<file>",
@@ -138,7 +138,7 @@ yyjsonk_fail_assert(const char *expr, const char *file, int line, const char *fm
     } else {
         snprintf(message,
                  sizeof(message),
-                 "[yyjson_kmdf][FAIL][%s] %s (%s:%d)\n",
+                 "[yyjson_kmdf_tests][FAIL][%s] %s (%s:%d)\n",
                  g_yyjsonk_current_test ? g_yyjsonk_current_test : "<no-test>",
                  expr ? expr : "<expr>",
                  file ? file : "<file>",
