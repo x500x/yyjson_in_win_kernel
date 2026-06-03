@@ -300,5 +300,5 @@ g
 
 ## 支持
 
-- **问题反馈**：[GitHub Issues](https://github.com/your-username/yyjson_in_win_kernel/issues)
-- **讨论交流**：[GitHub Discussions](https://github.com/your-username/yyjson_in_win_kernel/discussions)
+- **问题反馈**：[GitHub Issues](https://github.com/x500x/yyjson_in_win_kernel/issues)
+- **讨论交流**：[GitHub Discussions](https://github.com/x500x/yyjson_in_win_kernel/discussions)
