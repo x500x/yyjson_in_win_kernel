@@ -15,7 +15,7 @@
 - **文件 I/O 支持**：从内核空间读写 JSON 文件（需要 `PASSIVE_LEVEL`）
 - **内存安全**：使用内核池分配并正确清理
 - **KMDF 集成**：通过 WDF 回调实现正确的驱动生命周期管理
-- **双项目结构**：独立的示例驱动和可复用的内核适配层
+- **静态库 + 示例结构**：`yyjson_kmdf_lib.lib` 提供可复用内核库，示例驱动单独链接使用
 
 ## 前提条件
 
@@ -33,13 +33,13 @@ git clone https://github.com/your-username/yyjson_in_win_kernel.git
 cd yyjson_in_win_kernel
 ```
 
-### 2. 构建示例驱动
+### 2. 构建库和示例驱动
 
 ```bash
 # 在 Visual Studio 中打开解决方案
 start yyjson_kmdf_example\example.sln
 
-# 或者从命令行构建
+# 或者从命令行构建，solution 会先构建 yyjson_kmdf_lib.lib 再构建 example.sys
 msbuild yyjson_kmdf_example\example.sln /p:Configuration=Release /p:Platform=x64
 ```
 
@@ -66,28 +66,27 @@ yyjson_kmdf_example\uninstall_example.cmd
 
 ```
 yyjson_in_win_kernel/
-├── yyjson_win_kernel/              # 内核适配层
-│   ├── compat/                     # C 运行时兼容层
-│   │   ├── include/                # 内核兼容头文件
-│   │   │   ├── stdio.h            # 文件 I/O 函数
-│   │   │   ├── math.h             # 数学函数
-│   │   │   ├── locale.h           # 区域设置支持
-│   │   │   └── assert.h           # 调试断言
-│   │   └── src/                    # 实现文件
-│   └── driver/                     # 测试驱动实现
-│       ├── driver.c                # KMDF 驱动入口
-│       ├── test_runner.c           # 测试执行逻辑
-│       └── test_registry.h         # 测试配置
+├── yyjson_kmdf_lib/                # 可复用 KMDF 静态库
+│   ├── yyjson_kmdf_lib.vcxproj     # 生成 yyjson_kmdf_lib.lib
+│   ├── include/                    # 库头文件与内核 shim 头
+│   │   ├── yyjson.h                # yyjson 公共 API
+│   │   ├── yyjsonk_runtime.h       # 内核运行时初始化/日志/文件 I/O API
+│   │   ├── stdio.h                 # 文件 I/O shim
+│   │   ├── math.h                  # 数学 shim
+│   │   ├── locale.h                # 区域设置 shim
+│   │   └── assert.h                # 调试断言 shim
+│   ├── src/                        # yyjson 源文件
+│   ├── compat/src/                 # 内核兼容层实现
+│   └── third_party/                # double-conversion 辅助库
 │
-├── yyjson_kmdf_example/            # 独立示例驱动
+├── yyjson_kmdf_example/            # 链接静态库的示例驱动
 │   ├── example.sln                 # Visual Studio 解决方案
 │   ├── example/                    # 驱动项目
-│   │   ├── driver/                 # 示例驱动代码
-│   │   ├── compat/                 # 兼容层
-│   │   ├── yyjson/                 # 内置 yyjson 源码
-│   │   └── third_party/            # double-conversion 库
+│   │   └── driver/                 # 示例驱动代码
 │   ├── install_example.cmd         # 驱动安装脚本
 │   └── uninstall_example.cmd       # 驱动卸载脚本
+│
+├── yyjson_win_kernel/              # 测试驱动与测试适配代码
 │
 ├── LICENSE                         # MIT 许可证
 └── README.md                       # 英文文档

@@ -15,7 +15,7 @@ A complete port of [yyjson](https://github.com/ibireme/yyjson) (high-performance
 - **File I/O Support**: Read/write JSON files from kernel space (requires `PASSIVE_LEVEL`)
 - **Memory Safety**: Uses kernel pool allocations with proper cleanup
 - **KMDF Integration**: Proper driver lifecycle management with WDF callbacks
-- **Dual Project Structure**: Standalone example driver and reusable kernel adaptation layer
+- **Static Library + Example Structure**: `yyjson_kmdf_lib.lib` provides the reusable kernel library, and the example driver links against it
 
 ## Prerequisites
 
@@ -33,13 +33,13 @@ git clone https://github.com/your-username/yyjson_in_win_kernel.git
 cd yyjson_in_win_kernel
 ```
 
-### 2. Build the Example Driver
+### 2. Build the Library and Example Driver
 
 ```bash
 # Open the solution in Visual Studio
 start yyjson_kmdf_example\example.sln
 
-# Or build from command line
+# Or build from command line. The solution builds yyjson_kmdf_lib.lib before example.sys.
 msbuild yyjson_kmdf_example\example.sln /p:Configuration=Release /p:Platform=x64
 ```
 
@@ -66,28 +66,27 @@ yyjson_kmdf_example\uninstall_example.cmd
 
 ```
 yyjson_in_win_kernel/
-├── yyjson_win_kernel/              # Kernel adaptation layer
-│   ├── compat/                     # C runtime compatibility
-│   │   ├── include/                # Kernel-compatible headers
-│   │   │   ├── stdio.h            # File I/O functions
-│   │   │   ├── math.h             # Math functions
-│   │   │   ├── locale.h           # Locale support
-│   │   │   └── assert.h           # Debug assertions
-│   │   └── src/                    # Implementation files
-│   └── driver/                     # Test driver implementation
-│       ├── driver.c                # KMDF driver entry
-│       ├── test_runner.c           # Test execution logic
-│       └── test_registry.h         # Test configuration
+├── yyjson_kmdf_lib/                # Reusable KMDF static library
+│   ├── yyjson_kmdf_lib.vcxproj     # Builds yyjson_kmdf_lib.lib
+│   ├── include/                    # Library headers and kernel shim headers
+│   │   ├── yyjson.h                # yyjson public API
+│   │   ├── yyjsonk_runtime.h       # Kernel runtime init/log/file I/O API
+│   │   ├── stdio.h                 # File I/O shim
+│   │   ├── math.h                  # Math shim
+│   │   ├── locale.h                # Locale shim
+│   │   └── assert.h                # Debug assertion shim
+│   ├── src/                        # yyjson source file
+│   ├── compat/src/                 # Kernel compatibility implementation
+│   └── third_party/                # double-conversion helper library
 │
-├── yyjson_kmdf_example/            # Standalone example driver
+├── yyjson_kmdf_example/            # Example driver that links the static library
 │   ├── example.sln                 # Visual Studio solution
 │   ├── example/                    # Driver project
-│   │   ├── driver/                 # Example driver code
-│   │   ├── compat/                 # Compatibility layer
-│   │   ├── yyjson/                 # Vendored yyjson sources
-│   │   └── third_party/            # double-conversion library
+│   │   └── driver/                 # Example driver code
 │   ├── install_example.cmd         # Driver installation script
 │   └── uninstall_example.cmd       # Driver removal script
+│
+├── yyjson_win_kernel/              # Test driver and test adaptation code
 │
 ├── LICENSE                         # MIT License
 └── README.md                       # This file

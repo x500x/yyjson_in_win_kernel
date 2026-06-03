@@ -5,11 +5,11 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![Build](https://img.shields.io/badge/Build-WDK%2010.0.22621-blue.svg)](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/download-the-wdk)
 
-一个独立的 KMDF 驱动示例，演示如何在 Windows 内核模式下集成 yyjson。本项目包含所有必要的源代码、兼容层和构建脚本。
+一个 KMDF 驱动示例，演示如何在 Windows 内核模式下集成 yyjson。示例驱动只保留业务代码，并通过 solution 引用 `yyjson_kmdf_lib.lib`。
 
 ## 功能特性
 
-- **自包含**：所有依赖项都包含在项目目录中
+- **库/示例分离**：`yyjson_kmdf_lib` 生成静态库，`example` 驱动链接使用
 - **完整示例**：JSON 解析、数组遍历、文档生成和文件 I/O
 - **内核安全**：正确的内存管理和 IRQL 合规性
 - **易于设置**：预配置的 Visual Studio 解决方案和安装脚本
@@ -29,7 +29,7 @@
 # 打开解决方案
 start example.sln
 
-# 从命令行构建（可选）
+# 从命令行构建（可选），solution 会先构建 yyjson_kmdf_lib.lib
 msbuild example.sln /p:Configuration=Release /p:Platform=x64
 ```
 
@@ -61,15 +61,14 @@ yyjson_kmdf_example/
 │   ├── driver/                 # 驱动实现
 │   │   ├── driver.c           # 驱动入口点
 │   │   └── example_sample.c   # JSON 操作示例
-│   ├── compat/                 # 内核兼容层
-│   │   ├── include/           # 头文件
-│   │   └── src/               # 实现文件
-│   ├── yyjson/                # 内置 yyjson 库
-│   │   └── src/               # yyjson 源代码
-│   └── third_party/           # 辅助库
-│       └── double-conversion/ # IEEE 754 转换
 ├── install_example.cmd        # 驱动安装脚本
 └── uninstall_example.cmd      # 驱动卸载脚本
+
+../yyjson_kmdf_lib/
+├── include/                   # yyjson.h、yyjsonk_runtime.h 与内核 shim 头
+├── src/                       # yyjson 源文件
+├── compat/src/                # 内核兼容层实现
+└── third_party/               # IEEE 754 转换辅助库
 ```
 
 ## 示例
@@ -200,11 +199,11 @@ char *yyjson_mut_write(yyjson_mut_doc *doc, yyjson_write_flag flg,
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](../LICENSE)
 [![Build](https://img.shields.io/badge/Build-WDK%2010.0.22621-blue.svg)](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk)
 
-A standalone KMDF driver example demonstrating yyjson integration in Windows kernel mode. This project includes all necessary source code, compatibility layer, and build scripts.
+A KMDF driver example demonstrating yyjson integration in Windows kernel mode. The example driver keeps only its own driver code and links against `yyjson_kmdf_lib.lib` from the solution.
 
 ## Features
 
-- **Self-Contained**: All dependencies included in the project tree
+- **Library/Example Split**: `yyjson_kmdf_lib` builds the static library, and `example` links against it
 - **Complete Examples**: JSON parsing, array traversal, document generation, and file I/O
 - **Kernel-Safe**: Proper memory management and IRQL compliance
 - **Easy Setup**: Pre-configured Visual Studio solution with installation scripts
@@ -224,7 +223,7 @@ A standalone KMDF driver example demonstrating yyjson integration in Windows ker
 # Open solution
 start example.sln
 
-# Build from command line (optional)
+# Build from command line (optional). The solution builds yyjson_kmdf_lib.lib first.
 msbuild example.sln /p:Configuration=Release /p:Platform=x64
 ```
 
@@ -256,15 +255,14 @@ yyjson_kmdf_example/
 │   ├── driver/                 # Driver implementation
 │   │   ├── driver.c           # Driver entry point
 │   │   └── example_sample.c   # JSON operation examples
-│   ├── compat/                 # Kernel compatibility layer
-│   │   ├── include/           # Header files
-│   │   └── src/               # Implementation files
-│   ├── yyjson/                # Vendored yyjson library
-│   │   └── src/               # yyjson source code
-│   └── third_party/           # Helper libraries
-│       └── double-conversion/ # IEEE 754 conversion
 ├── install_example.cmd        # Driver installation script
 └── uninstall_example.cmd      # Driver removal script
+
+../yyjson_kmdf_lib/
+├── include/                   # yyjson.h, yyjsonk_runtime.h, and kernel shim headers
+├── src/                       # yyjson source file
+├── compat/src/                # Kernel compatibility implementation
+└── third_party/               # IEEE 754 conversion helper library
 ```
 
 ## Examples

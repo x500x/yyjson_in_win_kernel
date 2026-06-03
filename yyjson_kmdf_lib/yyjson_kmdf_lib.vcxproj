@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{A8FE5468-2B49-4D21-92BC-1DBBB244A13C}</ProjectGuid>
-    <RootNamespace>example</RootNamespace>
+    <ProjectGuid>{F00A8A17-0CEB-4B2E-9B6F-A7D4D2F7665C}</ProjectGuid>
+    <RootNamespace>yyjson_kmdf_lib</RootNamespace>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
@@ -23,7 +23,7 @@
     <TargetVersion>Windows10</TargetVersion>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
-    <ConfigurationType>Driver</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <DriverType>KMDF</DriverType>
     <DriverTargetPlatform>Universal</DriverTargetPlatform>
     <Driver_SpectreMitigation>false</Driver_SpectreMitigation>
@@ -32,7 +32,7 @@
     <TargetVersion>Windows10</TargetVersion>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>WindowsKernelModeDriver10.0</PlatformToolset>
-    <ConfigurationType>Driver</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <DriverType>KMDF</DriverType>
     <DriverTargetPlatform>Universal</DriverTargetPlatform>
     <Driver_SpectreMitigation>false</Driver_SpectreMitigation>
@@ -43,20 +43,19 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup>
-    <SkipPackageVerification>true</SkipPackageVerification>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
-    <TargetName>example</TargetName>
+    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>yyjson_kmdf_lib</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DebuggerFlavor>DbgengKernelDebugger</DebuggerFlavor>
-    <TargetName>example</TargetName>
+    <OutDir>$(ProjectDir)bin\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)obj\$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>yyjson_kmdf_lib</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\yyjson_kmdf_lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)third_party;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN64;DBG=1;DEPRECATE_DDK_FUNCTIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SpectreMitigation>false</SpectreMitigation>
       <WarningLevel>Level3</WarningLevel>
@@ -69,19 +68,10 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <ForcedIncludeFiles></ForcedIncludeFiles>
     </ClCompile>
-    <Link>
-      <SubSystem>Native</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\yyjson_kmdf_lib\bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>yyjson_kmdf_lib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <DriverSign>
-      <FileDigestAlgorithm>sha256</FileDigestAlgorithm>
-    </DriverSign>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\yyjson_kmdf_lib\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)third_party;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_WIN64;NDEBUG;DEPRECATE_DDK_FUNCTIONS=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SpectreMitigation>false</SpectreMitigation>
       <WarningLevel>Level3</WarningLevel>
@@ -93,41 +83,29 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <ForcedIncludeFiles></ForcedIncludeFiles>
     </ClCompile>
-    <Link>
-      <SubSystem>Native</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\yyjson_kmdf_lib\bin\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>yyjson_kmdf_lib.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <DriverSign>
-      <FileDigestAlgorithm>sha256</FileDigestAlgorithm>
-    </DriverSign>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="driver\driver.c" />
-    <ClCompile Include="driver\example_sample.c" />
+    <ClCompile Include="compat\src\yyjsonk_alloc.c" />
+    <ClCompile Include="compat\src\yyjsonk_format.c" />
+    <ClCompile Include="compat\src\yyjsonk_locale.c" />
+    <ClCompile Include="compat\src\yyjsonk_runtime.c" />
+    <ClCompile Include="compat\src\yyjsonk_stdio.c" />
+    <ClCompile Include="src\yyjson.c" />
+    <ClCompile Include="third_party\goo_double_conv.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\yyjson_kmdf_lib\include\yyjson.h" />
-    <ClInclude Include="..\..\yyjson_kmdf_lib\include\yyjsonk_runtime.h" />
-    <ClInclude Include="driver\example_sample.h" />
-    <ClInclude Include="driver\kprintf.h" />
+    <ClInclude Include="include\assert.h" />
+    <ClInclude Include="include\locale.h" />
+    <ClInclude Include="include\math.h" />
+    <ClInclude Include="include\stdio.h" />
+    <ClInclude Include="include\yyjson.h" />
+    <ClInclude Include="include\yyjsonk_config.h" />
+    <ClInclude Include="include\yyjsonk_runtime.h" />
+    <ClInclude Include="third_party\goo_double_conv.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\README.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <Inf Include="example.inf" />
-  </ItemGroup>
-  <ItemGroup>
-    <FilesToPackage Include="$(TargetPath)" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\yyjson_kmdf_lib\yyjson_kmdf_lib.vcxproj">
-      <Project>{F00A8A17-0CEB-4B2E-9B6F-A7D4D2F7665C}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <LinkLibraryDependencies>false</LinkLibraryDependencies>
-    </ProjectReference>
+    <None Include="yyjson\LICENSE" />
+    <None Include="yyjson\README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

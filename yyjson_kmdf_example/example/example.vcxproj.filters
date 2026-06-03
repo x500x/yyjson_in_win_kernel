@@ -4,66 +4,24 @@
     <Filter Include="driver">
       <UniqueIdentifier>{5448A179-D946-4953-8C3D-49D9D3265724}</UniqueIdentifier>
     </Filter>
-    <Filter Include="compat\include">
-      <UniqueIdentifier>{77D701CD-B50B-4A29-A06D-DF9E909ACD28}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="compat\src">
-      <UniqueIdentifier>{9A97F4B0-6D77-4D0D-824C-081793217F7F}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="yyjson\src">
-      <UniqueIdentifier>{AA0F67B7-0C1B-4933-A7CF-59EFB70C9432}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="third_party">
-      <UniqueIdentifier>{73F58CE8-C54A-40F8-9E6D-2E6B98761A31}</UniqueIdentifier>
+    <Filter Include="library">
+      <UniqueIdentifier>{B24DEBF0-3942-49FE-9614-FBCAD888796F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="compat\src\yyjsonk_alloc.c">
-      <Filter>compat\src</Filter>
-    </ClCompile>
-    <ClCompile Include="compat\src\yyjsonk_format.c">
-      <Filter>compat\src</Filter>
-    </ClCompile>
-    <ClCompile Include="compat\src\yyjsonk_locale.c">
-      <Filter>compat\src</Filter>
-    </ClCompile>
-    <ClCompile Include="compat\src\yyjsonk_runtime.c">
-      <Filter>compat\src</Filter>
-    </ClCompile>
-    <ClCompile Include="compat\src\yyjsonk_stdio.c">
-      <Filter>compat\src</Filter>
-    </ClCompile>
     <ClCompile Include="driver\driver.c">
       <Filter>driver</Filter>
     </ClCompile>
     <ClCompile Include="driver\example_sample.c">
       <Filter>driver</Filter>
     </ClCompile>
-    <ClCompile Include="third_party\goo_double_conv.c">
-      <Filter>third_party</Filter>
-    </ClCompile>
-    <ClCompile Include="yyjson\src\yyjson.c">
-      <Filter>yyjson\src</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="compat\include\assert.h">
-      <Filter>compat\include</Filter>
+    <ClInclude Include="..\..\yyjson_kmdf_lib\include\yyjson.h">
+      <Filter>library</Filter>
     </ClInclude>
-    <ClInclude Include="compat\include\locale.h">
-      <Filter>compat\include</Filter>
-    </ClInclude>
-    <ClInclude Include="compat\include\math.h">
-      <Filter>compat\include</Filter>
-    </ClInclude>
-    <ClInclude Include="compat\include\stdio.h">
-      <Filter>compat\include</Filter>
-    </ClInclude>
-    <ClInclude Include="compat\include\yyjsonk_config.h">
-      <Filter>compat\include</Filter>
-    </ClInclude>
-    <ClInclude Include="compat\include\yyjsonk_runtime.h">
-      <Filter>compat\include</Filter>
+    <ClInclude Include="..\..\yyjson_kmdf_lib\include\yyjsonk_runtime.h">
+      <Filter>library</Filter>
     </ClInclude>
     <ClInclude Include="driver\example_sample.h">
       <Filter>driver</Filter>
@@ -71,17 +29,9 @@
     <ClInclude Include="driver\kprintf.h">
       <Filter>driver</Filter>
     </ClInclude>
-    <ClInclude Include="third_party\goo_double_conv.h">
-      <Filter>third_party</Filter>
-    </ClInclude>
-    <ClInclude Include="yyjson\src\yyjson.h">
-      <Filter>yyjson\src</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
-    <None Include="yyjson\LICENSE" />
-    <None Include="yyjson\README.md" />
   </ItemGroup>
   <ItemGroup>
     <Inf Include="example.inf" />
