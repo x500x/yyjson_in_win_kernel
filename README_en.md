@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Build](https://img.shields.io/badge/Build-WDK%2010.0.22621-blue.svg)](https://learn.microsoft.com/en-us/windows-hardware/drivers/download-the-wdk)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20Kernel%20(x64)-green.svg)](https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20Kernel%20(x64%2FARM64)-green.svg)](https://docs.microsoft.com/en-us/windows-hardware/drivers/kernel/)
 
 A complete port of [yyjson](https://github.com/ibireme/yyjson) (high-performance JSON library) to Windows Kernel-Mode Driver Framework (KMDF). This project provides a minimal compatibility layer that bridges yyjson's C runtime dependencies with kernel-mode APIs.
 
@@ -15,12 +15,13 @@ A complete port of [yyjson](https://github.com/ibireme/yyjson) (high-performance
 - **File I/O Support**: Read/write JSON files from kernel space (requires `PASSIVE_LEVEL`)
 - **Memory Safety**: Uses kernel pool allocations with proper cleanup
 - **KMDF Integration**: Proper driver lifecycle management with WDF callbacks
-- **Static Library + Example Structure**: `yyjson_kmdf_lib.lib` provides the reusable kernel library, and the example driver links against it
+- **Static Library + Example Structure**: `yyjson_kmdf_lib.lib` provides the reusable kernel library, the library project supports `x64`/`ARM64`, and the example driver links against it
 
 ## Prerequisites
 
 - **Visual Studio 2022** (or later) with C++ Desktop Development workload
 - **Windows Driver Kit (WDK)** 10.0.22621 (or compatible version)
+- **ARM64 Build Tools**: Install the matching VS/WDK components only when building the `ARM64` static library
 - **Test Signing Enabled**: `bcdedit /set testsigning on`
 - **Kernel Debugging Setup** (optional but recommended): WinDbg or DebugView
 
@@ -68,6 +69,7 @@ yyjson_kmdf_example\uninstall_example.cmd
 yyjson_in_win_kernel/
 ├── yyjson_kmdf_lib/                # Reusable KMDF static library
 │   ├── yyjson_kmdf_lib.vcxproj     # Builds yyjson_kmdf_lib.lib
+│   ├── build-all-abi.ps1           # Batch-builds x64/ARM64 static libraries
 │   ├── include/                    # Library headers and kernel shim headers
 │   │   ├── yyjson.h                # yyjson public API
 │   │   ├── yyjsonk_runtime.h       # Kernel runtime init/log/file I/O API
@@ -153,14 +155,35 @@ yyjson_doc *doc = yyjson_read_file(path, 0, NULL, NULL);
 
 ## Building from Source
 
-### Option 1: Visual Studio IDE
+### Build the Static Library
+
+`yyjson_kmdf_lib` supports `Debug|x64`, `Release|x64`, `Debug|ARM64`, and `Release|ARM64`. WDK 10 kernel driver projects do not accept `Win32` as a valid architecture.
+
+```powershell
+# Build Debug/Release for x64 and ARM64
+pwsh -File .\yyjson_kmdf_lib\build-all-abi.ps1
+
+# Build Release only
+pwsh -File .\yyjson_kmdf_lib\build-all-abi.ps1 -Configuration Release
+
+# Build ARM64 only
+pwsh -File .\yyjson_kmdf_lib\build-all-abi.ps1 -Platform ARM64
+```
+
+Output path:
+
+```text
+yyjson_kmdf_lib\bin\<Platform>\<Configuration>\yyjson_kmdf_lib.lib
+```
+
+### Option 1: Visual Studio IDE (Example Driver)
 
 1. Open `yyjson_kmdf_example\example.sln`
 2. Select configuration: `Debug|x64` or `Release|x64`
 3. Build Solution (Ctrl+Shift+B)
 4. Output: `x64\Release\example.sys`
 
-### Option 2: Command Line
+### Option 2: Command Line (Example Driver)
 
 ```bash
 # Set up build environment
@@ -172,10 +195,11 @@ msbuild yyjson_kmdf_example\example.sln /p:Configuration=Release /p:Platform=x64
 
 ### Build Configurations
 
-| Configuration | Description |
-|---------------|-------------|
-| `Debug|x64`   | Debug build with symbols, no optimizations |
-| `Release|x64` | Release build with optimizations |
+| Target | Configuration | Description |
+|--------|---------------|-------------|
+| Static library | `Debug|x64` / `Debug|ARM64` | Debug build with symbols, no optimizations |
+| Static library | `Release|x64` / `Release|ARM64` | Release build with optimizations |
+| Example/test drivers | `Debug|x64` / `Release|x64` | Current driver project configurations |
 
 ## API Reference
 

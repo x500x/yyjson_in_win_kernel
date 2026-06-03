@@ -4,7 +4,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Build](https://img.shields.io/badge/Build-WDK%2010.0.22621-blue.svg)](https://learn.microsoft.com/zh-cn/windows-hardware/drivers/download-the-wdk)
-[![Platform](https://img.shields.io/badge/Platform-Windows%20Kernel%20(x64)-green.svg)](https://docs.microsoft.com/zh-cn/windows-hardware/drivers/kernel/)
+[![Platform](https://img.shields.io/badge/Platform-Windows%20Kernel%20(x64%2FARM64)-green.svg)](https://docs.microsoft.com/zh-cn/windows-hardware/drivers/kernel/)
 
 将 [yyjson](https://github.com/ibireme/yyjson)（高性能 JSON 库）完整移植到 Windows 内核模式驱动框架 (KMDF)。本项目提供了一个最小化的兼容层，用于桥接 yyjson 的 C 运行时依赖与内核模式 API。
 
@@ -15,12 +15,13 @@
 - **文件 I/O 支持**：从内核空间读写 JSON 文件（需要 `PASSIVE_LEVEL`）
 - **内存安全**：使用内核池分配并正确清理
 - **KMDF 集成**：通过 WDF 回调实现正确的驱动生命周期管理
-- **静态库 + 示例结构**：`yyjson_kmdf_lib.lib` 提供可复用内核库，示例驱动单独链接使用
+- **静态库 + 示例结构**：`yyjson_kmdf_lib.lib` 提供可复用内核库，库工程支持 `x64`/`ARM64`，示例驱动单独链接使用
 
 ## 前提条件
 
 - **Visual Studio 2022**（或更高版本），包含 C++ 桌面开发工作负载
 - **Windows 驱动程序工具包 (WDK)** 10.0.22621（或兼容版本）
+- **ARM64 构建工具**：仅在需要生成 `ARM64` 静态库时安装对应 VS/WDK 组件
 - **启用测试签名**：`bcdedit /set testsigning on`
 - **内核调试设置**（可选但推荐）：WinDbg 或 DebugView
 
@@ -68,6 +69,7 @@ yyjson_kmdf_example\uninstall_example.cmd
 yyjson_in_win_kernel/
 ├── yyjson_kmdf_lib/                # 可复用 KMDF 静态库
 │   ├── yyjson_kmdf_lib.vcxproj     # 生成 yyjson_kmdf_lib.lib
+│   ├── build-all-abi.ps1           # 批量生成 x64/ARM64 静态库
 │   ├── include/                    # 库头文件与内核 shim 头
 │   │   ├── yyjson.h                # yyjson 公共 API
 │   │   ├── yyjsonk_runtime.h       # 内核运行时初始化/日志/文件 I/O API
@@ -154,14 +156,35 @@ yyjson_doc *doc = yyjson_read_file(path, 0, NULL, NULL);
 
 ## 从源码构建
 
-### 方式一：Visual Studio IDE
+### 构建静态库
+
+`yyjson_kmdf_lib` 支持 `Debug|x64`、`Release|x64`、`Debug|ARM64`、`Release|ARM64`。WDK 10 的内核驱动项目不接受 `Win32` 作为有效架构。
+
+```powershell
+# 生成 Debug/Release 的 x64 和 ARM64 静态库
+pwsh -File .\yyjson_kmdf_lib\build-all-abi.ps1
+
+# 只生成 Release
+pwsh -File .\yyjson_kmdf_lib\build-all-abi.ps1 -Configuration Release
+
+# 只生成 ARM64
+pwsh -File .\yyjson_kmdf_lib\build-all-abi.ps1 -Platform ARM64
+```
+
+输出路径：
+
+```text
+yyjson_kmdf_lib\bin\<Platform>\<Configuration>\yyjson_kmdf_lib.lib
+```
+
+### 方式一：Visual Studio IDE（示例驱动）
 
 1. 打开 `yyjson_kmdf_example\example.sln`
 2. 选择配置：`Debug|x64` 或 `Release|x64`
 3. 生成解决方案（Ctrl+Shift+B）
 4. 输出：`x64\Release\example.sys`
 
-### 方式二：命令行
+### 方式二：命令行（示例驱动）
 
 ```bash
 # 设置构建环境
@@ -173,10 +196,11 @@ msbuild yyjson_kmdf_example\example.sln /p:Configuration=Release /p:Platform=x64
 
 ### 构建配置
 
-| 配置 | 说明 |
-|------|------|
-| `Debug|x64` | 调试版本，包含符号，无优化 |
-| `Release|x64` | 发布版本，启用优化 |
+| 目标 | 配置 | 说明 |
+|------|------|------|
+| 静态库 | `Debug|x64` / `Debug|ARM64` | 调试版本，包含符号，无优化 |
+| 静态库 | `Release|x64` / `Release|ARM64` | 发布版本，启用优化 |
+| 示例/测试驱动 | `Debug|x64` / `Release|x64` | 当前驱动工程配置 |
 
 ## API 参考
 

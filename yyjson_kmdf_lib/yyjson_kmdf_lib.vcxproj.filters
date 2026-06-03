@@ -67,6 +67,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <None Include="build-all-abi.ps1" />
     <None Include="yyjson\LICENSE">
       <Filter>yyjson</Filter>
     </None>
