@@ -302,8 +302,3 @@ g
 
 - **问题反馈**：[GitHub Issues](https://github.com/your-username/yyjson_in_win_kernel/issues)
 - **讨论交流**：[GitHub Discussions](https://github.com/your-username/yyjson_in_win_kernel/discussions)
-- **电子邮件**：your.email@example.com
-
----
-
-**注意**：本项目仅用于教育和开发目的。在生产环境中使用前，请务必在隔离环境中测试内核驱动。

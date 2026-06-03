@@ -301,8 +301,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - **Issues**: [GitHub Issues](https://github.com/your-username/yyjson_in_win_kernel/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/your-username/yyjson_in_win_kernel/discussions)
-- **Email**: your.email@example.com
-
----
-
-**Note**: This project is for educational and development purposes. Always test kernel drivers in isolated environments before production use.
